@@ -118,8 +118,8 @@ const Users = () => {
   return (
     <>
       <DateRange
-        startDate={date.firstDate}
-        endDate={date.endDate}
+        start={date.firstDate}
+        end={date.endDate}
         onChange={(value) =>
           setDate({
             firstDate: value[0],

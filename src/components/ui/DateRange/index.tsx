@@ -8,8 +8,8 @@ import TableDate from "./Table";
 import { Button } from "..";
 
 interface DateRangeType {
-  start: null;
-  end: null;
+  start: Moment | null | string;
+  end: Moment | null | string;
   onChange: (arg: any) => void;
 }
 
@@ -34,14 +34,10 @@ const DateRange = ({ start, end, onChange }: DateRangeType) => {
     secondDate: null,
   });
 
-  const close = () => {
+  const onClose = () => {
     setReturnValue({
-      startDate: null,
-      endDate: null,
-    });
-    setDate({
-      firstDate: null,
-      secondDate: null,
+      startDate: "",
+      endDate: "",
     });
   };
 
@@ -237,23 +233,19 @@ const DateRange = ({ start, end, onChange }: DateRangeType) => {
     return list;
   }, [secondDayDate, startDate, endDate]);
 
-  useEffect(() => {
-    console.log(date);
-  }, [date]);
-
   const inputValue = useMemo(() => {
-    if (startDate && endDate) {
-      return `${moment(startDate).format("DD MMMM YYYY")} - ${moment(
-        endDate
-      ).format("DD MMMM YYYY")}`;
+    if (start && end) {
+      return `${moment(start).format("DD MMMM YYYY")} - ${moment(end).format(
+        "DD MMMM YYYY"
+      )}`;
     }
     return "";
-  }, [startDate, endDate]);
+  }, [start, end]);
 
   return (
     <Popover className="relative">
       <Popover.Button className={"outline-none"}>
-        <Input value={inputValue} className="min-w-[300px] text-sm" />
+        <Input value={inputValue} className="min-w-[300px] text-sm" readOnly />
       </Popover.Button>
       <Transition
         as={Fragment}
@@ -265,46 +257,61 @@ const DateRange = ({ start, end, onChange }: DateRangeType) => {
         leaveTo="opacity-0 translate-y-1"
       >
         <Popover.Panel className="absolute z-10 bg-white py-4 px-3 mt-2 flex flex-col gap-5 border rounded-md shadow">
-          <div className="flex gap-10">
-            <div className="flex flex-col min-w-[230px]">
-              <div className="flex justify-between items-center text-sm mb-3">
-                <BiChevronLeft
-                  size="2em"
-                  onClick={() => {
-                    firstPrevious();
-                  }}
-                />
-                <div className="flex gap-1  font-medium">
-                  <span>{date?.firstDate?.format("MMM")}</span>
-                  <span>{date?.firstDate?.format("YYYY")}</span>
+          {({ close }) => (
+            <>
+              <div className="flex gap-10">
+                <div className="flex flex-col min-w-[230px]">
+                  <div className="flex justify-between items-center text-sm mb-3 cursor-pointer">
+                    <BiChevronLeft
+                      size="2em"
+                      onClick={() => {
+                        firstPrevious();
+                      }}
+                    />
+                    <div className="flex gap-1  font-medium">
+                      <span>{date?.firstDate?.format("MMM")}</span>
+                      <span>{date?.firstDate?.format("YYYY")}</span>
+                    </div>
+                    <BiChevronRight size="2em" onClick={firstNext} />
+                  </div>
+                  <TableDate days={firstDays} />
                 </div>
-                <BiChevronRight size="2em" onClick={firstNext} />
-              </div>
-              <TableDate days={firstDays} />
-            </div>
-            <div className="flex flex-col min-w-[230px]">
-              <div className="flex justify-between items-center text-sm mb-3">
-                <BiChevronLeft
-                  size="2em"
-                  onClick={() => {
-                    secondPrevious();
-                  }}
-                />
-                <div className="flex gap-1  font-medium">
-                  <span>{date?.secondDate?.format("MMM")}</span>
-                  <span>{date?.secondDate?.format("YYYY")}</span>
+                <div className="flex flex-col min-w-[230px]">
+                  <div className="flex justify-between items-center text-sm mb-3 cursor-pointer">
+                    <BiChevronLeft
+                      size="2em"
+                      onClick={() => {
+                        secondPrevious();
+                      }}
+                    />
+                    <div className="flex gap-1  font-medium">
+                      <span>{date?.secondDate?.format("MMM")}</span>
+                      <span>{date?.secondDate?.format("YYYY")}</span>
+                    </div>
+                    <BiChevronRight size="2em" onClick={secondNext} />
+                  </div>
+                  <TableDate days={secondDays} />
                 </div>
-                <BiChevronRight size="2em" onClick={secondNext} />
               </div>
-              <TableDate days={secondDays} />
-            </div>
-          </div>
 
-          <div className="flex text-semibold text-xs ml-auto items-center">
-            <span>{inputValue}</span>
-            <Button text="Cancel" variant="default" onClick={close} />
-            <Button text="Apply" variant="primary-border" onClick={onApply} />
-          </div>
+              <div className="flex text-semibold text-xs ml-auto items-center">
+                <span>{inputValue}</span>
+                <Button
+                  text="Cancel"
+                  variant="default"
+                  onClick={() => {
+                    onClose();
+                    close();
+                  }}
+                />
+                <Button
+                  text="Apply"
+                  variant="primary-border"
+                  onClick={onApply}
+                />
+              </div>
+            </>
+          )}
         </Popover.Panel>
       </Transition>
     </Popover>

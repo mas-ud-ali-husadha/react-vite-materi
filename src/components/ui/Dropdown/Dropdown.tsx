@@ -34,7 +34,7 @@ const Dropdown = ({ text, id, children }: DropdownType) => {
   const active = useActive(id);
   return (
     <div
-      className="relative "
+      className="relative z-50"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
       ref={setReferenceElement}

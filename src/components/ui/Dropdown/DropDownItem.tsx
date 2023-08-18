@@ -52,7 +52,7 @@ const DropDownItem = ({ text, children }: DropdownType) => {
             ref={setPopperElement}
             style={styles.popper}
             {...attributes.popper}
-            className="horizontal-dropdown-panel"
+            className="horizontal-dropdown-panel z-50"
           >
             {children}
           </Popover.Panel>
