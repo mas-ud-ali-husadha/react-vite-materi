@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import InputVariant from "../Input/InputVariant";
+import { Input } from "..";
 
 type SelectType = {
   data: { [key: string]: string | number }[];
@@ -43,9 +44,7 @@ const Select = ({
         <div className="relative">
           <Combobox.Button>
             <Combobox.Input
-              className={`${String(style)} ${String(
-                className
-              )} font-light tracking-wide outline-none placeholder:text-slate-400`}
+              as={Input}
               displayValue={(item: any) => item[label]}
               onChange={(event) => setQuery(event.target.value)}
             />

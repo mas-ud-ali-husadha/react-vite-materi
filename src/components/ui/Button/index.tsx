@@ -24,9 +24,9 @@ const Button = ({
   const style = ButtonVariant(variant);
   return (
     <button
-      className={`button ${style} ${String(
-        className
-      )} hover:bg-slate-600 disabled:bg-slate-600 transition-all `}
+      className={`button ${style} ${
+        className ? String(className) : ""
+      }  transition-all `}
       {...props}
     >
       {Icon && <Icon size="1.2em" />}

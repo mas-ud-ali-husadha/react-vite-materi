@@ -1,9 +1,11 @@
 import {
   Button,
   Form,
+  ImageInputBlock,
   Input,
   InputLabel,
   Modal,
+  Switch,
 } from "@/components/ui";
 import toBase64 from "@/helper/toBase64";
 import useFetchData from "@/hooks/useFetchData";
@@ -12,6 +14,7 @@ import { ListData } from "@/types/UserTypes";
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { IoSaveSharp } from "react-icons/io5";
+import { Status, defaultValues } from "./variable";
 
 interface DialogType {
   open: boolean;
@@ -19,23 +22,6 @@ interface DialogType {
   onClose: () => void;
   editData: ListData;
 }
-
-const Status = [
-  {
-    label: "Admin",
-    value: 1,
-  },
-  {
-    label: "Kitchen",
-    value: 0,
-  },
-];
-
-const defaultValues = {
-  email: "",
-  name: "",
-  password: "",
-};
 
 const Dialog = ({ open, refresh, onClose, editData }: DialogType) => {
   const { id } = editData;
@@ -68,11 +54,9 @@ const Dialog = ({ open, refresh, onClose, editData }: DialogType) => {
   });
 
   const onSubmit = async (data: ListData) => {
-    console.log(data.photo);
     if (data.photo) {
       data.photo = await toBase64(data.photo);
     }
-    console.log(data);
     void request.fetch(data);
   };
 
@@ -90,6 +74,12 @@ const Dialog = ({ open, refresh, onClose, editData }: DialogType) => {
         onSubmit={handleSubmit(onSubmit)}
         className="items-center justify-center"
       >
+        <Controller
+          control={control}
+          name="photo"
+          render={({ field }) => <ImageInputBlock {...field} />}
+        />
+
         <InputLabel label="Nama" name="name" errors={errors}>
           <Input
             {...register("name", {
@@ -108,6 +98,19 @@ const Dialog = ({ open, refresh, onClose, editData }: DialogType) => {
               },
             })}
             placeholder="admin@javacode.landa.id"
+          />
+        </InputLabel>
+
+        <InputLabel label="Phone" name="phone_number" errors={errors}>
+          <Input
+            {...register("phone_number", {
+              required: "Phone wajib diisi",
+              pattern: {
+                value: /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/,
+                message: "Format Phone salah",
+              },
+            })}
+            placeholder="+62"
           />
         </InputLabel>
 
@@ -130,6 +133,16 @@ const Dialog = ({ open, refresh, onClose, editData }: DialogType) => {
           />
         </InputLabel>
 
+        <InputLabel label="Status" name="user_roles_id" errors={errors}>
+          <Controller
+            name="user_roles_id"
+            control={control}
+            rules={{
+              required: "Status wajib diisi",
+            }}
+            render={({ field }) => <Switch {...field} data={Status} />}
+          />
+        </InputLabel>
         <div className="flex ml-auto ">
           <Button
             icon={IoSaveSharp}

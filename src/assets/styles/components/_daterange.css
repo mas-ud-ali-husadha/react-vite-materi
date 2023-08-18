@@ -1,0 +1,12 @@
+/* Days.css */
+.start {
+  @apply bg-primary text-white rounded;
+}
+
+.end {
+  @apply bg-primary text-white rounded;
+}
+
+.between {
+  background-color: #f6f6f6;
+}

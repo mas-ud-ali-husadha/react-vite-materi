@@ -45,7 +45,6 @@ api.interceptors.response.use(
     return res;
   },
   (err) => {
-    console.log(err);
     handleRequestError(err);
     return Promise.reject(err);
   }
